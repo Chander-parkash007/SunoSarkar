@@ -2,6 +2,7 @@ package SunoSarkar.service;
 
 import SunoSarkar.dto.ComplaintRequestDto;
 import SunoSarkar.entity.Complaint;
+import SunoSarkar.entity.ComplaintHistory;
 import SunoSarkar.entity.ComplaintPhoto;
 import SunoSarkar.entity.User;
 import SunoSarkar.enums.ComplaintStatus;
@@ -128,5 +129,15 @@ public String upVoteComplaint(Long complaintId){
     return "Thank, Upvoted successfully!";
 
 }
-
+private void saveHistory(Complaint complaint,
+                         String oldStatus,
+                         String newStatus,
+                         String note){
+    ComplaintHistory history = new ComplaintHistory();
+    history.setComplaint(complaint);
+    history.setOldStatus(oldStatus);
+    history.setNewStatus(newStatus);
+    history.setNote(note);
+    complaintHistoryRepository.save(history);
+}
 }
