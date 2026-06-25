@@ -1,10 +1,7 @@
 package SunoSarkar.service;
 
 import SunoSarkar.dto.ComplaintRequestDto;
-import SunoSarkar.entity.Complaint;
-import SunoSarkar.entity.ComplaintHistory;
-import SunoSarkar.entity.ComplaintPhoto;
-import SunoSarkar.entity.User;
+import SunoSarkar.entity.*;
 import SunoSarkar.enums.ComplaintStatus;
 import SunoSarkar.respository.*;
 import com.cloudinary.Cloudinary;
@@ -139,5 +136,17 @@ private void saveHistory(Complaint complaint,
     history.setNewStatus(newStatus);
     history.setNote(note);
     complaintHistoryRepository.save(history);
+}
+
+public void notifyOfficers(Complaint complaint){
+    List<Officer> officers = officerRepository.findByUcCode(complaint.getUcCode());
+    for(Officer officer : officers){
+        if (officer.getIsEmailVerified() && officer.getIsVerifiedByAdmin()){
+            emailService.sendComplaintNotification(officer.getEmail(),
+                    officer.getFullName(),
+                    complaint.getTitle(),
+                    complaint.getId().toString());
+        }
+    }
 }
 }
