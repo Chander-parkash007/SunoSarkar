@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -82,5 +83,27 @@ public List<Complaint> getAllComlaints(){
     return allByOrderByCreatedAtDesc;
 }
 
-public List<>
+public List<Complaint> getAllPublicComplaints(String city){
+    return complaintRepository.findByCityOrderByCreatedAtDesc(city);
+}
+
+public Complaint updateStatus(Long complaintId,
+                              String newStatus,
+                              String officerEmail,
+                              String note){
+    Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->
+            new RuntimeException("Complaint not found with id : "+ complaintId));
+    String oldStatus = complaint.getStatus().name();
+    complaint.setStatus(ComplaintStatus.valueOf(newStatus));
+    if (newStatus.equals("RESOLVED")){
+        complaint.setResolvedAt(LocalDateTime.now());
+    }
+    complaintRepository.save(complaint);
+    saveHistory(complaint,oldStatus,newStatus,note);
+    emailService.sendStatusUpdateEmail(complaint.getUser().getEmail(),
+            complaint.getUser().getFullName(),
+            complaint.getTitle(),
+            newStatus);
+    return complaint;
+}
 }
