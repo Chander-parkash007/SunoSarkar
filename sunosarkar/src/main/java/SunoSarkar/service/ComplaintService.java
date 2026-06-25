@@ -77,5 +77,10 @@ public List<Complaint> getComplaintsByArea(String ucCode){
     return complaintRepository.findByUcCode(ucCode);
 }
 
+public List<Complaint> getAllComlaints(){
+    List<Complaint> allByOrderByCreatedAtDesc = complaintRepository.findAllByOrderByCreatedAtDesc();
+    return allByOrderByCreatedAtDesc;
+}
 
+public List<>
 }
