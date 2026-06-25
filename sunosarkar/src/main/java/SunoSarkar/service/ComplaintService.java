@@ -106,4 +106,27 @@ public Complaint updateStatus(Long complaintId,
             newStatus);
     return complaint;
 }
+
+public String complaintResolved(Long complaintId, String email){
+    Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->
+            new RuntimeException("Complaint not found with this Id : "+ complaintId));
+    if (!complaint.getUser().getEmail().equals(email)){
+        throw new RuntimeException("Unauthorize");
+    }
+    complaint.setConfirmedResolved(true);
+    complaint.setStatus(ComplaintStatus.CLOSED);
+    complaintRepository.save(complaint);
+
+    saveHistory(complaint, "RESOLVED","CLOSE","Confirmed by citizen");
+    return "Thank you confirmation your complaint has been resolved and marked as closed";
+}
+public String upVoteComplaint(Long complaintId){
+    Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->
+            new RuntimeException("Complaint not found with id : "+complaintId));
+    complaint.setUpVoteCount(complaint.getUpVoteCount() + 1);
+    complaintRepository.save(complaint);
+    return "Thank, Upvoted successfully!";
+
+}
+
 }
