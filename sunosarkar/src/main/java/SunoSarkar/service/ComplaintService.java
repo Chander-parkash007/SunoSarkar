@@ -67,5 +67,9 @@ public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> phot
     return saved;
 }
 
-
+public List<Complaint> getMyComplaints(String userEmail){
+    User user = userRepository.findByEmail(userEmail).orElseThrow(()->
+            new RuntimeException("User not found with this email : "+userEmail));
+    return complaintRepository.findByUserId(user.getId());
+}
 }
