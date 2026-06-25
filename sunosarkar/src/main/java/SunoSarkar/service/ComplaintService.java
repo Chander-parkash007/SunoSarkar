@@ -72,4 +72,10 @@ public List<Complaint> getMyComplaints(String userEmail){
             new RuntimeException("User not found with this email : "+userEmail));
     return complaintRepository.findByUserId(user.getId());
 }
+
+public List<Complaint> getComplaintsByArea(String ucCode){
+    return complaintRepository.findByUcCode(ucCode);
+}
+
+
 }
