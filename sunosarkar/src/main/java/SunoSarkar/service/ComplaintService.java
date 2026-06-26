@@ -70,7 +70,8 @@ public List<Complaint> getMyComplaints(String userEmail){
     return complaintRepository.findByUserId(user.getId());
 }
 
-public List<Complaint> getComplaintsByArea(String ucCode){
+public List<Complaint> getComplaintsByArea(String ucCode)
+{
     return complaintRepository.findByUcCode(ucCode);
 }
 
