@@ -115,14 +115,14 @@ public String complaintResolved(Long complaintId, String email){
     complaintRepository.save(complaint);
 
     saveHistory(complaint, "RESOLVED","CLOSE","Confirmed by citizen");
-    return "Thank you confirmation your complaint has been resolved and marked as closed";
+    return "Thank you for confirmation. Your complaint has been resolved and marked as closed";
 }
 public String upVoteComplaint(Long complaintId){
     Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->
             new RuntimeException("Complaint not found with id : "+complaintId));
     complaint.setUpVoteCount(complaint.getUpVoteCount() + 1);
     complaintRepository.save(complaint);
-    return "Thank, Upvoted successfully!";
+    return "Thank you, Upvoted successfully!";
 
 }
 private void saveHistory(Complaint complaint,
