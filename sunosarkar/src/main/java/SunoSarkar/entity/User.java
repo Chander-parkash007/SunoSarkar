@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import SunoSarkar.enums.Gender;
 import SunoSarkar.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,6 +35,7 @@ public class User {
     @Email
     @Column(name = "email", unique = true, nullable = false)
     private String email;
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "age")
