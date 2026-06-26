@@ -11,8 +11,8 @@ import java.util.List;
 public class EmergencyService {
     @Autowired
     private EmergencyContactRepository emergencyContactRepository;
-    public List<EmergencyContact> getByCity(String city){
-        return emergencyContactRepository.findByCity(city);
+    public List<EmergencyContact> getByCityAndNational(String city){
+        return emergencyContactRepository.findByCityOrCityIsNull(city);
     }
     public EmergencyContact save(EmergencyContact contact){
         return emergencyContactRepository.save(contact);

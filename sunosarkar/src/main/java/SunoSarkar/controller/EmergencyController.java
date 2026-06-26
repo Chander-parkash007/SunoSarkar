@@ -17,7 +17,7 @@ public class EmergencyController {
     private EmergencyService service;
     @GetMapping("/{city}")
     public ResponseEntity<List<EmergencyContact>> getByCity(@PathVariable String city){
-        return ResponseEntity.ok(service.getByCity(city));
+        return ResponseEntity.ok(service.getByCityAndNational(city));
     }
     @PostMapping
     public ResponseEntity<EmergencyContact> add(EmergencyContact contact){
