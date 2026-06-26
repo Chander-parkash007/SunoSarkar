@@ -33,9 +33,10 @@ public class ComplaintService {
 
 public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> photos,String userEmail)
     throws IOException{
+    System.out.println("=== EMAIL FROM TOKEN: " + userEmail);
     User user = userRepository.findByEmail(userEmail).orElseThrow(()->
             new RuntimeException("User not found with this email"));
-
+    System.out.println("=== USER FOUND: " + user.getId());
     Complaint complaint = new Complaint();
     complaint.setTitle(dto.getTitle());
     complaint.setDescription(dto.getDescription());
