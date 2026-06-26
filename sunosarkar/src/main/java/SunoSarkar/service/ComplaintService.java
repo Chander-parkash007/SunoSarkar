@@ -15,8 +15,6 @@ import java.util.List;
 
 @Service
 public class ComplaintService {
-@Autowired
-   private ComplaintService complaintService;
 
 @Autowired
     private ComplaintRepository complaintRepository;
