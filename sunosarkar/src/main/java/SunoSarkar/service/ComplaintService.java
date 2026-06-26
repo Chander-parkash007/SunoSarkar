@@ -38,10 +38,11 @@ public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> phot
             new RuntimeException("User not found with this email"));
     System.out.println("=== USER FOUND: " + user.getId());
     Complaint complaint = new Complaint();
+    complaint.setUser(user);
     complaint.setTitle(dto.getTitle());
     complaint.setDescription(dto.getDescription());
     complaint.setCategory(dto.getCategory());
-    complaint.setPriorty(dto.getPriority());
+    complaint.setPriority(dto.getPriority());
     complaint.setLocationLink(dto.getLocationLink());
     complaint.setCity(dto.getCity());
     complaint.setUcCode(dto.getUcCode());
@@ -109,7 +110,7 @@ public String complaintResolved(Long complaintId, String email){
     if (!complaint.getUser().getEmail().equals(email)){
         throw new RuntimeException("Unauthorize");
     }
-    complaint.setConfirmedResolved(true);
+    complaint.setIsConfirmedResolved(true);
     complaint.setStatus(ComplaintStatus.CLOSED);
     complaintRepository.save(complaint);
 

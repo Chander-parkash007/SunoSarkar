@@ -45,8 +45,8 @@ public class Complaint {
     private ComplainCategory category;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "priorty")
-    private ComplaintPriorty priorty = ComplaintPriorty.NORMAL;
+    @Column(name = "priority")
+    private ComplaintPriorty priority = ComplaintPriorty.NORMAL;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -62,7 +62,7 @@ public class Complaint {
     @Column(name = "upvote_count")
     private Integer upVoteCount = 0;
     @Column(name = "is_confirmed_resolved")
-    private boolean isConfirmedResolved = false;
+    private Boolean isConfirmedResolved = false;
     @Column(name = "user_feedback", columnDefinition = "TEXT")
     private String userFeedback;
     @Column(name = "feedback_rating")
