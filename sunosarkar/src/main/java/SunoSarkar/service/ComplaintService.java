@@ -37,16 +37,14 @@ public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> phot
             new RuntimeException("User not found with this email"));
 
     Complaint complaint = new Complaint();
-    complaint.setUser(user);
     complaint.setTitle(dto.getTitle());
     complaint.setDescription(dto.getDescription());
-    complaint.setCity(dto.getCity());
-    complaint.setAreaAddress(dto.getComplaintAreaAddress());
-    complaint.setUcCode(dto.getUcCode());
+    complaint.setCategory(dto.getCategory());
+    complaint.setPriorty(dto.getPriority());
     complaint.setLocationLink(dto.getLocationLink());
-    complaint.setCategory(dto.getComaplaintCategory());
-    complaint.setPriorty(dto.getPriorty());
-    complaint.setStatus(ComplaintStatus.PENDING);
+    complaint.setCity(dto.getCity());
+    complaint.setUcCode(dto.getUcCode());
+    complaint.setAreaAddress(dto.getAreaAddress());
 
     Complaint saved = complaintRepository.save(complaint);
 

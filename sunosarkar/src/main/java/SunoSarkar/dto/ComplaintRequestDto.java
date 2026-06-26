@@ -8,17 +8,25 @@ import lombok.Data;
 
 @Data
 public class ComplaintRequestDto {
-    @NotNull(message = "Complaint title is required")
+
+    @NotBlank(message = "Title is required")
     private String title;
-    @NotNull(message = "Complaint description is required")
+
+    @NotBlank(message = "Description is required")
     private String description;
-    @NotBlank(message = "Complaint category is required")
-    private ComplainCategory comaplaintCategory;
-    private ComplaintPriorty priorty = ComplaintPriorty.NORMAL;
+
+    @NotNull(message = "Category is required")
+    private ComplainCategory category;
+
+    private ComplaintPriorty priority;
+
     private String locationLink;
-    private String ucCode;
-    @NotNull(message = "City of complaint is required")
+
+    @NotBlank(message = "City is required")
     private String city;
-    @NotNull(message = "Complaint area address is required")
-    private String complaintAreaAddress;
+
+    private String ucCode;
+
+    @NotBlank(message = "Area address is required")
+    private String areaAddress;
 }

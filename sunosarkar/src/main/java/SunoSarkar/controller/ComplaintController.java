@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth/controller")
+@RequestMapping("/api/complaints")
 @CrossOrigin(origins = "*")
 public class ComplaintController {
 
@@ -26,11 +26,11 @@ public class ComplaintController {
 @PostMapping
     @PreAuthorize("hasRole('CITIZEN')")
     public ResponseEntity<Complaint> fileComplaint(@Valid
-                                                   @RequestPart("complaint")ComplaintRequestDto dto,
-                                                   @RequestPart(value = "photos", required = false) List<MultipartFile> photos,
+                                                   @RequestBody ComplaintRequestDto dto,
+//                                                   @RequestPart(value = "photos", required = false) List<MultipartFile> photos,
                                                    Principal principal) throws IOException {
     String email = principal.getName();
-    Complaint complaint = complaintService.fileComplaint(dto,photos,email);
+    Complaint complaint = complaintService.fileComplaint(dto,null,email);
     return ResponseEntity.status(HttpStatus.CREATED).body(complaint);
 }
 @GetMapping("/my")
