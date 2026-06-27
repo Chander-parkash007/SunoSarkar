@@ -6,6 +6,9 @@ import SunoSarkar.enums.ComplaintStatus;
 import SunoSarkar.respository.*;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -78,19 +81,20 @@ public List<Complaint> getMyComplaints(String userEmail){
     return complaintRepository.findByUserId(user.getId());
 }
 
-public List<Complaint> getComplaintsByArea(String ucCode)
-{
-    return complaintRepository.findByUcCode(ucCode);
-}
+    public Page<Complaint> getComplaintsByArea(String ucCode, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return complaintRepository.findByUcCodeOrderByCreatedAtDesc(ucCode, pageable);
+    }
 
-public List<Complaint> getAllComlaints(){
-    List<Complaint> allByOrderByCreatedAtDesc = complaintRepository.findAllByOrderByCreatedAtDesc();
-    return allByOrderByCreatedAtDesc;
-}
+    public Page<Complaint> getAllComplaints(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return complaintRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
 
-public List<Complaint> getAllPublicComplaints(String city){
-    return complaintRepository.findByCityOrderByCreatedAtDesc(city);
-}
+    public Page<Complaint> getPublicComplaints(String city, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return complaintRepository.findByCityOrderByCreatedAtDesc(city, pageable);
+    }
 
 public Complaint updateStatus(Long complaintId,
                               String newStatus,

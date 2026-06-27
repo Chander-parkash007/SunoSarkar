@@ -5,11 +5,13 @@ import SunoSarkar.entity.Complaint;
 import SunoSarkar.service.ComplaintService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -23,35 +25,52 @@ public class ComplaintController {
     @Autowired
     private ComplaintService complaintService;
 
-@PostMapping
     @PreAuthorize("hasRole('CITIZEN')")
-    public ResponseEntity<Complaint> fileComplaint(@Valid
-                                                   @RequestBody ComplaintRequestDto dto,
-//                                                   @RequestPart(value = "photos", required = false) List<MultipartFile> photos,
-                                                   Principal principal) throws IOException {
-    String email = principal.getName();
-    Complaint complaint = complaintService.fileComplaint(dto,null,email);
-    return ResponseEntity.status(HttpStatus.CREATED).body(complaint);
-}
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<Complaint> fileComplaint(
+            @RequestPart("complaint") String complaintJson,
+            @RequestPart(value = "photos", required = false) List<MultipartFile> photos,
+            Principal principal) throws IOException {
+
+        // manually parse JSON string to DTO
+        ObjectMapper mapper = new ObjectMapper();
+        ComplaintRequestDto dto = mapper.readValue(complaintJson, ComplaintRequestDto.class);
+
+        Complaint complaint = complaintService.fileComplaint(dto, photos, principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(complaint);
+    }
+
 @GetMapping("/my")
 public ResponseEntity<List<Complaint>> getMyComplaint(Principal principal){
 return ResponseEntity.ok(complaintService.getMyComplaints(principal.getName()));
 }
 
-    @PreAuthorize("hasAnyRole('UC_CHAIRMAN','TOWN_OFFICER','MUNICIPAL_WORKER','AC','DC','MAYOR','ADMIN')")
     @GetMapping("/area")
-    public ResponseEntity<List<Complaint>> getCompalintsByArea(@RequestParam String ucCode){
-    return ResponseEntity.ok(complaintService.getComplaintsByArea(ucCode));
+    @PreAuthorize("hasAnyRole('UC_CHAIRMAN','TOWN_OFFICER','MUNICIPAL_WORKER','AC','DC','MAYOR','ADMIN')")
+    public ResponseEntity<Page<Complaint>> getByArea(
+            @RequestParam String ucCode,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(complaintService.getComplaintsByArea(ucCode, page, size));
     }
-    @PreAuthorize("hasAnyRole('AC','DC','MAYOR','ADMIN')")
+
     @GetMapping("/all")
-    public ResponseEntity<List<Complaint>> getAllComplaints(){
-    return ResponseEntity.ok(complaintService.getAllComlaints());
+    @PreAuthorize("hasAnyRole('AC','DC','MAYOR','ADMIN')")
+    public ResponseEntity<Page<Complaint>> getAllComplaints(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(complaintService.getAllComplaints(page, size));
     }
-@GetMapping("/public")
-    public ResponseEntity<List<Complaint>> getPublicComplaint(@RequestParam String city){
-    return ResponseEntity.ok(complaintService.getAllPublicComplaints(city));
-}
+    @GetMapping("/public")
+    public ResponseEntity<Page<Complaint>> getPublicComplaints(
+            @RequestParam String city,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(complaintService.getPublicComplaints(city, page, size));
+    }
     @PreAuthorize("hasAnyRole('UC_CHAIRMAN','TOWN_OFFICER','MUNICIPAL_WORKER','AC','DC','MAYOR','ADMIN')")
 @PostMapping("/{id}/status")
     public ResponseEntity<Complaint> updateStatus(@PathVariable Long id,
