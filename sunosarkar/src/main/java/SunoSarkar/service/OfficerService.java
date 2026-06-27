@@ -53,7 +53,7 @@ public class OfficerService {
                 return complaintRepository.findByUcCodeAndStatus(officer.getUcCode(), ComplaintStatus.PENDING);
 
     }
-    public Map<String, Object> getLeaderBoard(){
+    public List<Map<String, Object>> getLeaderBoard(){
         List<Officer> officers = officerRepository.findAll();
         List<Map<String, Object>> leaderBoard = new ArrayList<>();
 
@@ -72,6 +72,6 @@ public class OfficerService {
         }
         leaderBoard.sort((a, b) ->
                 Long.compare((Long) b.get("resolvedComplaints"), (Long) a.get("resolvedComplaints")));
-return (Map<String, Object>) leaderBoard;
+return (List<Map<String, Object>>) leaderBoard;
     }
 }

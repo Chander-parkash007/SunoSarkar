@@ -36,8 +36,8 @@ public class OfficerController {
         return ResponseEntity.ok(officerService.getPendingComplaints(principal.getName()));
     }
 
-    @GetMapping
-    public ResponseEntity<Map<String,Object>> getLeaderBoard(){
+    @GetMapping("/leaderboard")
+    public ResponseEntity<List<Map<String,Object>>> getLeaderBoard(){
         return ResponseEntity.ok(officerService.getLeaderBoard());
     }
 }
