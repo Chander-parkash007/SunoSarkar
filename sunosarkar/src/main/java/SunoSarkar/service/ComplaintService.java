@@ -30,6 +30,8 @@ public class ComplaintService {
     private EmailService emailService;
 @Autowired
     private CloudinaryService cloudinaryService;
+@Autowired
+private ComplaintPhotoRepository photoRepository;
 
 public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> photos,String userEmail)
     throws IOException{
@@ -50,15 +52,21 @@ public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> phot
 
     Complaint saved = complaintRepository.save(complaint);
 
-    if (photos !=null && photos.isEmpty()){
-        for(MultipartFile photo : photos){
-            String url = cloudinaryService.uploadPhoto(photo);
-            ComplaintPhoto cp = new ComplaintPhoto();
-            cp.setComplaint(complaint);
-            cp.setPhotoUrl(url);
-            complaintPhotoRepository.save(cp);
+    if (photos != null && !photos.isEmpty()) {
+        for (MultipartFile photo : photos) {
+            try {
+                String url = cloudinaryService.uploadPhoto(photo);
+                System.out.println("=== PHOTO UPLOADED: " + url);
+                ComplaintPhoto cp = new ComplaintPhoto();
+                cp.setComplaint(saved);
+                cp.setPhotoUrl(url);
+                photoRepository.save(cp);
+            } catch (Exception e) {
+                System.out.println("=== PHOTO UPLOAD FAILED: " + e.getMessage());
+            }
         }
     }
+
     saveHistory(saved,null,"PENDING","Complain filed by citizen");
     notifyOfficers(saved);
     return saved;
