@@ -9,14 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "opt_tokens")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class OtpToken {
 
     @Id
@@ -29,8 +31,9 @@ public class OtpToken {
     @Column(name = "email", nullable = false)
     private String email;
 
+    // Use Boolean (not boolean) and field name "used" to avoid Lombok isUsed() conflict
     @Column(name = "is_used")
-    private boolean isUsed = false;
+    private Boolean used = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

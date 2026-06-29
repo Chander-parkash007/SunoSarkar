@@ -1,14 +1,16 @@
 package SunoSarkar.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class OtpDto {
-    @NotNull(message = "Email is required")
+
+    @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
-private String email;
-    @NotNull(message = "Otp code is required")
-private String otpCode;
+    private String email;
+
+    @NotBlank(message = "OTP code is required")
+    private String otpCode;
 }

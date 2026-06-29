@@ -110,7 +110,9 @@ public class AuthService {
                  user.getRole().name(),
                  user.getEmail(),
                  user.getFullName(),
-                 "Login successful"
+                 "Login successful",
+                 user.getUcCode(),
+                 user.getCity()
          );
     }
 
@@ -135,7 +137,9 @@ public class AuthService {
                 officer.getRole().name(),
                 officer.getEmail(),
                 officer.getFullName(),
-                "Login successful"
+                "Login successful",
+                officer.getUcCode(),
+                officer.getCity()
         );
     }
     public String resendOtp(String email){

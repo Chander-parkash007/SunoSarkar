@@ -34,12 +34,12 @@ public ResponseEntity<List<Officer>> getPendingOfficers(){
         return ResponseEntity.ok(adminService.getPendingOfficer());
 }
 @PutMapping("/officers/{id}/verify")
-public ResponseEntity<String> verifyOfficer(@PathVariable Long officerId){
-        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.verifyOfficer(officerId));
+public ResponseEntity<String> verifyOfficer(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.verifyOfficer(id));
 }
 @PutMapping("/users/{id}/deactivate")
-    public ResponseEntity<String> deactivateUsers(@PathVariable Long userId){
-    return ResponseEntity.status(HttpStatus.CREATED).body(adminService.deactivateUser(userId));
+    public ResponseEntity<String> deactivateUsers(@PathVariable Long id){
+    return ResponseEntity.status(HttpStatus.CREATED).body(adminService.deactivateUser(id));
 }
 @GetMapping("stats")
     public ResponseEntity<Map<String, Object>> platfromStats(){

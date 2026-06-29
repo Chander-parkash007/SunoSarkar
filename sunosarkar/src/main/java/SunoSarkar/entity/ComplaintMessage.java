@@ -2,6 +2,7 @@ package SunoSarkar.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +25,8 @@ public class ComplaintMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "complaint_id", nullable = false)
     private Complaint complaint;
