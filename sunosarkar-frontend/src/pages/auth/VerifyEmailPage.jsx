@@ -114,6 +114,17 @@ export default function VerifyEmailPage() {
             {/* Body */}
             <div style={{ padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
 
+              {/* Email delivery notice */}
+              <div style={{ padding: '12px 14px', borderRadius: 10, background: 'rgba(202,138,4,0.08)', border: '1px solid rgba(202,138,4,0.2)', fontSize: 12, color: '#ca8a04', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <span style={{ flexShrink: 0, fontSize: 14 }}>⚠️</span>
+                <span>
+                  {isUrdu
+                    ? 'اگر ای میل نہ ملے تو اسپام فولڈر چیک کریں یا "دوبارہ بھیجیں" دبائیں۔ ڈیلیوری میں 1–2 منٹ لگ سکتے ہیں۔'
+                    : 'If you don\'t receive the OTP, check your spam folder or click "Resend". Delivery may take 1–2 minutes.'
+                  }
+                </span>
+              </div>
+
               {/* Email input (if no email param) */}
               {!emailParam && (
                 <div>
