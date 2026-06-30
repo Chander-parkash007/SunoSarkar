@@ -43,6 +43,7 @@ public class SecurityConfig {
             "https://*.railway.app",
             "https://*.up.railway.app",
             "https://*.trycloudflare.com",
+            "https://suno-sarkar.vercel.app",
             "https://sunosarkar.vercel.app",
             "https://sunosarkar-frontend.vercel.app"
         ));
