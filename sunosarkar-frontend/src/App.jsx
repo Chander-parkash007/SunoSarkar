@@ -24,6 +24,7 @@ import AdminComplaintsPage from './pages/admin/AdminComplaintsPage';
 import PublicFeedPage from './pages/public/PublicFeedPage';
 import LeaderboardPage from './pages/public/LeaderboardPage';
 import EmergencyPage from './pages/public/EmergencyPage';
+import MapPage from './pages/public/MapPage';
 
 function RequireAuth({ children, role }) {
   if (!isLoggedIn()) return <Navigate to="/login" replace />;
@@ -94,6 +95,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/complaints/public" element={<PublicFeedPage />} />
         <Route path="/stats" element={<CityStatsPage />} />
+        <Route path="/map" element={<MapPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/emergency" element={<EmergencyPage />} />
 

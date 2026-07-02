@@ -36,6 +36,7 @@ export default function Navbar() {
   const links = [
     { to: '/', label: t('home') },
     { to: '/complaints/public', label: t('complaints') },
+    { to: '/map', label: isUrdu ? 'نقشہ' : 'Map' },
     { to: '/stats', label: 'Stats' },
     { to: '/leaderboard', label: t('leaderboard') },
     { to: '/emergency', label: t('emergency') },

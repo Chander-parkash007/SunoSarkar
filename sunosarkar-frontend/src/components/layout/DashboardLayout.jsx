@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, FileText, Plus, Users, Shield, Trophy,
-  Phone, ChevronLeft, ChevronRight, LogOut, Menu, X, Globe, BarChart3,
+  Phone, ChevronLeft, ChevronRight, LogOut, Menu, X, Globe, BarChart3, MapPin,
 } from 'lucide-react';
 import { clearAuth, getFullName, getRole, ROLE_LABELS } from '../../lib/auth';
 import { useApp } from '../../context/AppContext';
@@ -37,6 +37,7 @@ export default function DashboardLayout({ children }) {
     { to: '/leaderboard', icon: Trophy, label: t('leaderboard') },
     { to: '/emergency', icon: Phone, label: t('emergency') },
     { to: '/complaints/public', icon: Globe, label: t('complaints') },
+    { to: '/map', icon: MapPin, label: isUrdu ? 'نقشہ' : 'Map' },
     { to: '/stats', icon: BarChart3, label: t('stats') },
   ];
 
@@ -234,7 +235,7 @@ export default function DashboardLayout({ children }) {
 
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--txt)' }}>
-              {getPageTitle(location.pathname, t)}
+              {getPageTitle(location.pathname, t, isUrdu)}
             </div>
             <div style={{ fontSize: 11, color: 'var(--txt-3)', marginTop: 1 }}>
               {new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -298,7 +299,7 @@ function NavItem({ to, icon: Icon, label, collapsed, active }) {
   );
 }
 
-function getPageTitle(path, t) {
+function getPageTitle(path, t, isUrdu = false) {
   const map = {
     '/dashboard/citizen': t('overview'),
     '/dashboard/citizen/complaints': t('myComplaints'),
@@ -312,6 +313,7 @@ function getPageTitle(path, t) {
     '/leaderboard': t('leaderboard'),
     '/emergency': t('emergency'),
     '/complaints/public': t('complaints'),
+    '/map': isUrdu ? 'شکایات کا نقشہ' : 'Complaints Map',
     '/stats': t('stats'),
   };
   return map[path] || t('dashboard');
