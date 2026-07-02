@@ -217,7 +217,8 @@ export default function MapPage() {
 
         {/* Count */}
         <span style={{ fontSize: 13, color: 'var(--txt-3)', marginLeft: 'auto' }}>
-          {isUrdu ? `${filteredCount} شکایات نقشے پر` : `${filteredCount} complaints on map`}
+          <span style={{ fontWeight: 700, color: 'var(--green-bright)' }}>{filteredCount}</span>
+          {' '}{isUrdu ? 'شکایات نقشے پر' : 'complaints on map'}
         </span>
       </div>
 
