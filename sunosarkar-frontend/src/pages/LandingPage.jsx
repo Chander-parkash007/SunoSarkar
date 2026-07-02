@@ -90,6 +90,7 @@ function TopNav() {
 
   const links = [
     { to: '/complaints/public', label: t('complaints') },
+    { to: '/map',               label: isUrdu ? 'نقشہ' : 'Map' },
     { to: '/stats',             label: t('stats') },
     { to: '/leaderboard',       label: t('leaderboard') },
     { to: '/emergency',         label: t('emergency') },
