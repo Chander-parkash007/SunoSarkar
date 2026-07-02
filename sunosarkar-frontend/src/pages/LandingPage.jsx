@@ -449,9 +449,12 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 36, textAlign: 'center' }}>
+          <div style={{ marginTop: 36, textAlign: 'center', display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/register" style={{ fontSize: 14, color: 'var(--green-bright)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
               File a complaint now <ArrowRight size={14} />
+            </Link>
+            <Link to="/map" style={{ fontSize: 14, color: 'var(--txt-2)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <MapPin size={14} /> View on map
             </Link>
           </div>
         </div>
