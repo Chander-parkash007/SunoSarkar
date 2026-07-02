@@ -1,0 +1,4 @@
+# Local scripts with credentials - never commit these
+run-me.ps1
+*.local.ps1
+secrets.txt
