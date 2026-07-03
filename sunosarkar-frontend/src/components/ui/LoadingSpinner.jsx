@@ -1,3 +1,4 @@
+// Reusable loading spinner component
 export default function LoadingSpinner({ size = 'md', text }) {
   const px = { sm: 16, md: 24, lg: 40, xl: 56 }[size] || 24;
   return (
@@ -21,7 +22,7 @@ export function PageLoader() {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: 'var(--bg)' }}>
       <div className="text-center">
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🇵🇰</div>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>ðŸ‡µðŸ‡°</div>
         <div className="flex justify-center mb-3">
           <LoadingSpinner size="lg" />
         </div>
