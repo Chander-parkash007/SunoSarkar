@@ -9,6 +9,9 @@ import SunoSarkar.respository.OfficerRepository;
 import SunoSarkar.respository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,17 +28,24 @@ public class AdminService {
     private UserRepository userRepository;
     @Autowired
     private OfficerRepository officerRepository;
-
+@Cacheable(value = "users", key = "'all'")
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
+    @Cacheable(value = "officers", key = "'all'")
     public List<Officer> getAllOfficers(){
         return officerRepository.findAll();
     }
+@Cacheable(value = "pendingofficers", key = "'all'")
     public List<Officer> getPendingOfficer(){
         return officerRepository.findAll().stream().filter(o -> !o.getIsVerifiedByAdmin()
         ).collect(Collectors.toList());
     }
+    @Caching(evict = {
+            @CacheEvict(value = "officers", key = "'all'"),
+            @CacheEvict(value = "platformstats", key = "'all'"),
+            @CacheEvict(value = "pendingofficers", key = "'all'")
+    })
     public String verifyOfficer (Long offcierId){
         Officer officer = officerRepository.findById(offcierId).
                 orElseThrow(()->
@@ -44,7 +54,10 @@ public class AdminService {
         officerRepository.save(officer);
         return "Officer verified successfully. They can now login.";
     }
-
+@Caching(evict = {
+        @CacheEvict(value = "users", key = "'all'"),
+        @CacheEvict(value = "platformstats", key = "'all'")
+})
     public String deactivateUser(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new RuntimeException("User not found with id : "+userId)
@@ -53,6 +66,7 @@ public class AdminService {
         userRepository.save(user);
         return "User deactivated successfully.";
     }
+    @Cacheable(value = "platformstats", key = "'all'")
     public Map<String,Object> getPlatformStats(){
         List<Complaint> complaints= complaintRepository.findAll();
         long total = complaints.size();
