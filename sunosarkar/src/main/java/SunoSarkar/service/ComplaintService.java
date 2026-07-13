@@ -6,6 +6,9 @@ import SunoSarkar.enums.ComplaintStatus;
 import SunoSarkar.respository.*;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +38,23 @@ public class ComplaintService {
     private CloudinaryService cloudinaryService;
 @Autowired
 private ComplaintPhotoRepository photoRepository;
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "myComplaints", key = "#userEmail"),
+                    @CacheEvict(value = "complaintsByArea", allEntries = true),
+                    @CacheEvict(value = "allComplaints", allEntries = true),
+                    @CacheEvict(value = "publicComplaints", allEntries = true),
+                    @CacheEvict(value = "officerDashboard", allEntries = true),
+                    @CacheEvict(value = "officerPendingComplaint", allEntries = true),
+                    @CacheEvict(value = "leaderboard", allEntries = true),
+                    @CacheEvict(value = "cityStats", allEntries = true),
+                    @CacheEvict(value = "categoryBreadown", allEntries = true),
+                    @CacheEvict(value = "statusBreakdown", allEntries = true)
+            }
+    )
+public Complaint fileComplaint(ComplaintRequestDto dto,
+                               List<MultipartFile> photos,String userEmail)
 
-public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> photos,String userEmail)
     throws IOException{
     System.out.println("=== EMAIL FROM TOKEN: " + userEmail);
     User user = userRepository.findByEmail(userEmail).orElseThrow(()->
@@ -74,28 +92,41 @@ public Complaint fileComplaint(ComplaintRequestDto dto, List<MultipartFile> phot
     notifyOfficers(saved);
     return saved;
 }
-
+@Cacheable(value = "myComplaints", key = "#userEmail")
 public List<Complaint> getMyComplaints(String userEmail){
     User user = userRepository.findByEmail(userEmail).orElseThrow(()->
             new RuntimeException("User not found with this email : "+userEmail));
     return complaintRepository.findByUserId(user.getId());
 }
-
+@Cacheable(value = "complaintsByArea", key = "#ucCode")
     public Page<Complaint> getComplaintsByArea(String ucCode, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return complaintRepository.findByUcCodeOrderByCreatedAtDesc(ucCode, pageable);
     }
-
+@Cacheable(value = "allComplaints", key = "'all'")
     public Page<Complaint> getAllComplaints(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return complaintRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
-
+@Cacheable(value = "publicComplaints", key = "#city")
     public Page<Complaint> getPublicComplaints(String city, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return complaintRepository.findByCityOrderByCreatedAtDesc(city, pageable);
     }
-
+@Caching(
+        evict = {
+                @CacheEvict(value = "myComplaints",allEntries = true),
+                @CacheEvict(value = "complaintsByArea", allEntries = true),
+                @CacheEvict(value = "allComplaints", allEntries = true),
+                @CacheEvict(value = "publicComplaints", allEntries = true),
+                @CacheEvict(value = "officerDashboard", key = "#officerEmail"),
+                @CacheEvict(value = "officerPendingComplaint", key = "#officerEmail"),
+                @CacheEvict(value = "leaderboard", allEntries = true),
+                @CacheEvict(value = "cityStats", allEntries = true),
+                @CacheEvict(value = "categoryBreadown", allEntries = true),
+                @CacheEvict(value = "statusBreakdown", allEntries = true)
+        }
+)
 public Complaint updateStatus(Long complaintId,
                               String newStatus,
                               String officerEmail,
@@ -115,7 +146,20 @@ public Complaint updateStatus(Long complaintId,
             newStatus);
     return complaint;
 }
-
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "myComplaints",allEntries = true),
+                    @CacheEvict(value = "complaintsByArea", allEntries = true),
+                    @CacheEvict(value = "allComplaints", allEntries = true),
+                    @CacheEvict(value = "publicComplaints", allEntries = true),
+                    @CacheEvict(value = "officerDashboard", allEntries = true),
+                    @CacheEvict(value = "officerPendingComplaint", allEntries = true),
+                    @CacheEvict(value = "leaderboard", allEntries = true),
+                    @CacheEvict(value = "cityStats", allEntries = true),
+                    @CacheEvict(value = "categoryBreadown", allEntries = true),
+                    @CacheEvict(value = "statusBreakdown", allEntries = true)
+            }
+    )
 public String complaintResolved(Long complaintId, String email){
     Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->
             new RuntimeException("Complaint not found with this Id : "+ complaintId));
@@ -129,6 +173,14 @@ public String complaintResolved(Long complaintId, String email){
     saveHistory(complaint, "RESOLVED","CLOSE","Confirmed by citizen");
     return "Thank you for confirmation. Your complaint has been resolved and marked as closed";
 }
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "myComplaints",allEntries = true),
+                    @CacheEvict(value = "complaintsByArea", allEntries = true),
+                    @CacheEvict(value = "allComplaints", allEntries = true),
+                    @CacheEvict(value = "publicComplaints", allEntries = true)
+            }
+    )
 public String upVoteComplaint(Long complaintId){
     Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->
             new RuntimeException("Complaint not found with id : "+complaintId));

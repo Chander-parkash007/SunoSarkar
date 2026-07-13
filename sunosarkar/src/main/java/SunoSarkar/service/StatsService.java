@@ -4,6 +4,7 @@ import SunoSarkar.entity.Complaint;
 import SunoSarkar.enums.ComplaintStatus;
 import SunoSarkar.respository.ComplaintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ public class StatsService {
 
     @Autowired
     private ComplaintRepository complaintRepository;
-
+@Cacheable(value = "cityStats", key = "#city")
     public Map<String, Object> getCityStats(String city) {
         List<Complaint> complaints = complaintRepository.findByCity(city);
 
@@ -43,6 +44,7 @@ public class StatsService {
 
         return stats;
     }
+    @Cacheable(value = "categoryBreadown", key = "#city")
 
     public Map<String, Long> getCategoryBreakdown(String city) {
         List<Complaint> complaints = complaintRepository.findByCity(city);
@@ -54,6 +56,7 @@ public class StatsService {
                         Collectors.counting()
                 ));
     }
+    @Cacheable(value = "statusBreakdown", key = "#city")
 
     public Map<String, Long> getStatusBreakdown(String city) {
         List<Complaint> complaints = complaintRepository.findByCity(city);

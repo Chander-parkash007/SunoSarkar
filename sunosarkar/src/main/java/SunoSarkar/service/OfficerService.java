@@ -6,6 +6,7 @@ import SunoSarkar.enums.ComplaintStatus;
 import SunoSarkar.respository.ComplaintRepository;
 import SunoSarkar.respository.OfficerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class OfficerService {
     private OfficerRepository officerRepository;
     @Autowired
     private ComplaintRepository complaintRepository;
-
+@Cacheable(value = "officerDashboard", key = "#officerEmail")
     public Map<String,Object> getDashboard(String officerEmail){
         Officer officer = officerRepository.findByEmail(officerEmail).orElseThrow(()->
                 new RuntimeException("Officer not found with this email : "+officerEmail));
@@ -46,6 +47,7 @@ public class OfficerService {
         dashboard.put("resolvedComplaints", resolved);
         return dashboard;
     }
+    @Cacheable(value = "officerPendingComplaint", key = "#officerEmail")
     public List<Complaint> getPendingComplaints(String officerEmail){
         Officer officer = officerRepository.findByEmail(officerEmail).orElseThrow(
                 () -> new RuntimeException("Offcier not found with this email : "+officerEmail));
@@ -53,6 +55,7 @@ public class OfficerService {
                 return complaintRepository.findByUcCodeAndStatus(officer.getUcCode(), ComplaintStatus.PENDING);
 
     }
+    @Cacheable(value = "leaderboard", key = "'all'")
     public List<Map<String, Object>> getLeaderBoard(){
         List<Officer> officers = officerRepository.findAll();
         List<Map<String, Object>> leaderBoard = new ArrayList<>();
