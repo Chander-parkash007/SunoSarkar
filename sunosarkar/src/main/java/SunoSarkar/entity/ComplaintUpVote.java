@@ -2,7 +2,7 @@ package SunoSarkar.entity;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,23 +22,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"createdAt", "hibernateLazyInitializer", "handler"})
 public class ComplaintUpVote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "complaint_id", nullable = false)
+    @JsonIgnoreProperties({"createdAt", "resolvedAt", "hibernateLazyInitializer", "handler"})
     private Complaint complaint;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"createdAt", "password", "hibernateLazyInitializer", "handler"})
     private User user;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
-
 }

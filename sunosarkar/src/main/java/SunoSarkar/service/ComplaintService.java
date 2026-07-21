@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -92,23 +92,27 @@ public Complaint fileComplaint(ComplaintRequestDto dto,
     notifyOfficers(saved);
     return saved;
 }
-@Cacheable(value = "myComplaints", key = "#userEmail")
+//@Cacheable(value = "myComplaints", key = "#userEmail")
 public List<Complaint> getMyComplaints(String userEmail){
     User user = userRepository.findByEmail(userEmail).orElseThrow(()->
             new RuntimeException("User not found with this email : "+userEmail));
     return complaintRepository.findByUserId(user.getId());
 }
-@Cacheable(value = "complaintsByArea", key = "#ucCode")
+    @Transactional(readOnly = true)
+//@Cacheable(value = "complaintsByArea", key = "#ucCode")
     public Page<Complaint> getComplaintsByArea(String ucCode, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return complaintRepository.findByUcCodeOrderByCreatedAtDesc(ucCode, pageable);
     }
-@Cacheable(value = "allComplaints", key = "'all'")
+
+    @Transactional(readOnly = true)
+    //@Cacheable(value = "allComplaints", key = "'all'")
     public Page<Complaint> getAllComplaints(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return complaintRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
-@Cacheable(value = "publicComplaints", key = "#city")
+    @Transactional(readOnly = true)
+    //@Cacheable(value = "publicComplaints", key = "#city")
     public Page<Complaint> getPublicComplaints(String city, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return complaintRepository.findByCityOrderByCreatedAtDesc(city, pageable);

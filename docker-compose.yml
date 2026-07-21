@@ -1,0 +1,73 @@
+
+
+services:
+
+  # ── MySQL Database ──────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: sunosarkar-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: sunosarkar
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql      # data persists after container restart
+    networks:
+      - sunosarkar-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pSoni@123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Spring Boot Backend ─────────────────────────────────────────
+  backend:
+    image: chander2410/sunosarkar-backend:1.0
+    container_name: sunosarkar-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Database — points to mysql service by name
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sunosarkar
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      # JWT
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      # Mail
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      # Cloudinary
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+    depends_on:
+      mysql:
+        condition: service_healthy     # wait until MySQL is ready
+    networks:
+      - sunosarkar-network
+
+  # ── React Frontend ──────────────────────────────────────────────
+  frontend:
+    image: chander2410/sunosarkar-frontend:1.0      # uses sunosarkar-frontend/Dockerfile
+    container_name: sunosarkar-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - sunosarkar-network
+
+# ── Volumes ─────────────────────────────────────────────────────
+volumes:
+  mysql-data:
+    driver: local
+
+# ── Networks ────────────────────────────────────────────────────
+networks:
+  sunosarkar-network:
+    driver: bridge

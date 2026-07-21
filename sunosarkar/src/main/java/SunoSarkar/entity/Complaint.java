@@ -6,19 +6,9 @@ import java.util.List;
 import SunoSarkar.enums.ComplainCategory;
 import SunoSarkar.enums.ComplaintPriorty;
 import SunoSarkar.enums.ComplaintStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,7 +27,7 @@ public class Complaint {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnoreProperties({"password", "complaints", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"password", "createdAt", "complaints", "hibernateLazyInitializer", "handler"})
     private User user;
 
     @Column(name = "complaint_title", nullable = false)
@@ -84,17 +74,18 @@ public class Complaint {
 
     @ManyToOne
     @JoinColumn(name = "assigned_officer_id")
-    @JsonIgnoreProperties({"password", "complaints", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"password", "createdAt", "complaints", "hibernateLazyInitializer", "handler"})
     private User assignedOfficer;
 
-    @OneToMany(mappedBy = "complaint", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("complaint")
+    @OneToMany(mappedBy = "complaint", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"complaint", "uploadedAt"})
     private List<ComplaintPhoto> photos;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "resolved_at")
     private LocalDateTime resolvedAt;
-
 }

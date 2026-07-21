@@ -2,7 +2,7 @@ package SunoSarkar.entity;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,15 +20,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@JsonIgnoreProperties({"sentAt", "hibernateLazyInitializer", "handler"})
 public class ComplaintMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "complaint_id", nullable = false)
+    @JsonIgnoreProperties({"createdAt", "resolvedAt", "hibernateLazyInitializer", "handler"})
     private Complaint complaint;
 
     @Column(name = "sender_id", nullable = false)

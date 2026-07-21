@@ -2,6 +2,7 @@ package SunoSarkar.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties({"createdAt", "expiresAt", "hibernateLazyInitializer", "handler"})
 public class OtpToken {
 
     @Id
@@ -31,7 +33,6 @@ public class OtpToken {
     @Column(name = "email", nullable = false)
     private String email;
 
-    // Use Boolean (not boolean) and field name "used" to avoid Lombok isUsed() conflict
     @Column(name = "is_used")
     private Boolean used = false;
 

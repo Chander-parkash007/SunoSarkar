@@ -33,7 +33,9 @@ public class GlobalExceptionHandler {
     // Generic fallback
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("An unexpected error occurred: " + e.getMessage());
     }
+
 }

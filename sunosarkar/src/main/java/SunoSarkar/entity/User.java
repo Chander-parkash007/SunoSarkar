@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import SunoSarkar.enums.Gender;
 import SunoSarkar.enums.Roles;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"createdAt", "password", "hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
@@ -35,7 +36,6 @@ public class User {
     @Email
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "age")
@@ -62,5 +62,4 @@ public class User {
     private boolean isActive = true;
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
-
 }
